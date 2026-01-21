@@ -1,14 +1,14 @@
-import expressAsyncHandler from "express-async-handler";
 import User from "../Model/user.model.js";
+import { asyncHandler } from "../Utils/asyncHandler.js";
 import generateToken from "../Utils/generateToken.util.js";
 
 
 // @desc Authorise user and get the token
 // @route POST /api/user/login
 
-export const authUser = expressAsyncHandler ( async (req,res)=>{
+export const authUser = asyncHandler ( async (req,res)=>{
     const {email, password} = req.body;
-    console.log(email, password)
+    console.log(email, password);
 
     const user = await User.findOne({email});
     console.log('Is matchPassword a function?', typeof user.matchPassword);
@@ -29,7 +29,7 @@ export const authUser = expressAsyncHandler ( async (req,res)=>{
 }
 );
 
-export const registerUser = expressAsyncHandler(async(req,res)=>{
+export const registerUser = asyncHandler(async(req,res)=>{
     const {email, name, password} = req.body;
 
     const userExists = await User.findOne({email});

@@ -1,8 +1,8 @@
-import expressAsyncHandler from "express-async-handler";
 import User from "../Model/user.model.js";
 import jwt from "jsonwebtoken"
+import { asyncHandler } from "../Utils/asyncHandler.js";
 
-const protect = expressAsyncHandler(async (req, res, next) => {
+export const protect = asyncHandler(async (req, res, next) => {
     let token = req.headers.authorization?.split(" ")[1];
     
     console.log("DEBUG 1: Raw Token from Header:", token ? "Token Received" : "NULL");
@@ -28,4 +28,12 @@ const protect = expressAsyncHandler(async (req, res, next) => {
     }
 });
 
-export default protect;
+export const admin = (req, res, next) => {
+    // Check if user exists and if they are an admin
+    if (req.user && req.user.isAdmin) {
+        next(); // User is admin, proceed to the controller
+    } else {
+        res.status(401);
+        throw new Error("Not authorized as an admin");
+    }
+};
